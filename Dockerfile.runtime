@@ -1,10 +1,16 @@
-FROM devdocker.mulesoft.com:18078/base/node:4.4-0.0.8-39-gcef6164
+FROM devdocker.mulesoft.com:18078/base/ubuntu:trusty-0.0.8-20-g0f43eea
 
-RUN npm install -g npm@2
+# Intall build dependencies
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      python \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
+COPY ./artifacts /usr/src/app/
+COPY Dockerfile.d/server.py /usr/src/app/
 
 EXPOSE 3000
 
-CMD npm run start:prem
+CMD python server.py '/scripts/embed.js' 3000
