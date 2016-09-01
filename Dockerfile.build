@@ -1,16 +1,5 @@
-FROM devdocker.mulesoft.com:18078/base/node:4.4-0.0.8-39-gcef6164
-
-# Intall build dependencies
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-      python \
-      python-dev \
-      python-pip \
-      python-virtualenv \
-      make \
-      gcc \
-      g++ \
- && rm -rf /var/lib/apt/lists/*
+# Base buildbox
+FROM node:4.3.1
 
 # Folder to copy source to be built
 RUN mkdir -p /usr/src/app
