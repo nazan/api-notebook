@@ -4,7 +4,6 @@ RUN npm install -g npm@2
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY ./build /usr/src/app/
 
 EXPOSE 3000
 

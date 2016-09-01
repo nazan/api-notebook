@@ -28,6 +28,17 @@
     "normalize-css": "2.3.0",
     "raml-parser": "0.8.7",
     "store": "1.3.14",
+    "grunt": "~0.4.2",
+    "grunt-browserify": "^4.0.1",
+    "grunt-cli": "~0.1.11",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "~0.6.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-stylus": "~0.12.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-newer": "~0.6.0",
+    "grunt-shell": "~0.7.0",
     "underscore": "1.6.0"
   },
   "devDependencies": {
