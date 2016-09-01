@@ -1,0 +1,11 @@
+FROM devdocker.mulesoft.com:18078/base/node:4.4-0.0.8-39-gcef6164
+
+RUN npm install -g npm@2
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY ./build /usr/src/app/
+
+EXPOSE 3000
+
+CMD npm run start:prem

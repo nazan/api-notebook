@@ -60,6 +60,7 @@
     "build": "grunt build",
     "grunt": "grunt",
     "start": "grunt",
+    "start:prem": "grunt",
     "test": "grunt test"
   },
   "repository": {
