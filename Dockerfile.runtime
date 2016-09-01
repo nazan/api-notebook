@@ -13,4 +13,4 @@ COPY Dockerfile.d/server.py /usr/src/app/
 
 EXPOSE 3000
 
-CMD python server.py '/scripts/embed.js' 3000
+CMD python server.py '/' 3000
