@@ -1,0 +1,16 @@
+FROM devdocker.mulesoft.com:18078/base/ubuntu:trusty-0.0.8-797-gab3a025
+
+# Intall build dependencies
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      python \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY ./artifacts /usr/src/app/
+COPY Dockerfile.d/server.py /usr/src/app/
+
+EXPOSE 3000
+
+CMD python server.py '/' 3000
