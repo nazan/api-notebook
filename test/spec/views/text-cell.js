@@ -38,44 +38,6 @@ describe('Text Cell', function () {
 
       describe('Focus Position', function () {
         /**
-         * Get the correct node and offset for a character position.
-         *
-         * @param  {Element} node
-         * @param  {Number}  offset
-         * @return {Object}
-         */
-        var getElPositions = function (node, offset) {
-          while (true) {
-            // Skip whitespace node injected by the markdown parsing.
-            if (
-                node.nodeType === 8 ||
-                (node.nodeType === 3 && /^\s*$/.test(node.textContent))
-              ) {
-              node = node.nextSibling;
-              continue;
-            }
-
-            if (offset > node.textContent.length) {
-              offset -= node.textContent.length;
-              node = node.nextSibling;
-              continue;
-            }
-
-            if (node.nodeType !== 3) {
-              node = node.firstChild;
-              continue;
-            }
-
-            break;
-          }
-
-          return {
-            node:   node,
-            offset: offset
-          }
-        };
-
-        /**
          * Check that clicking a text cell focuses on the expected position.
          *
          * @param  {String}   text
@@ -85,30 +47,17 @@ describe('Text Cell', function () {
          * @param  {Object}   end
          * @return {Function}
          */
-        var testFocus = function (text, anchor, start, focus, end) {
+        var testFocus = function (text) {
           return function () {
             // Set the value and trigger blur which will generate the markdown
             // element.
             view.setValue(text).trigger('blur');
 
-            // Get the correct element positions to test.
             var markdownEl = view.el.getElementsByClassName('markdown')[0];
-            var anchorPos  = getElPositions(markdownEl, anchor);
-            var focusPos   = anchorPos;
+            simulateEvent(markdownEl, 'click');
 
-            if (focus && anchor !== focus) {
-              focusPos = getElPositions(markdownEl, focus);
-            }
-
-            var positions = view.getPositions({
-              anchorNode:   anchorPos.node,
-              anchorOffset: anchorPos.offset,
-              focusNode:    focusPos.node,
-              focusOffset:  focusPos.offset
-            });
-
-            expect(positions.start).to.deep.equal(start);
-            expect(positions.end).to.deep.equal(end || start);
+            expect(view.editor).to.not.be.undefined;
+            expect(view.hasFocus()).to.be.true;
           };
         };
 

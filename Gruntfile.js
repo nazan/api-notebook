@@ -245,7 +245,7 @@ module.exports = function (grunt) {
         options: {
           middleware: serverMiddleware,
           port:       PORT,
-          hostname:   '*',
+          hostname:   'localhost',
           base:       BUILD_DIR
         }
       }
@@ -288,7 +288,7 @@ module.exports = function (grunt) {
 
   // Generate the built application.
   grunt.registerTask('build', [
-    'clean:build', 'copy:build', 'browserify', 'stylus'
+    'check', 'clean:build', 'copy:build', 'browserify', 'stylus'
   ]);
 
   grunt.registerTask('pages', [

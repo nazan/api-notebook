@@ -90,6 +90,16 @@ var toFormData = function (data) {
 };
 
 /**
+ * Transform a data object into a String.
+ *
+ * @param  {Object}   data
+ * @return {String}
+ */
+var toString = function (data) {
+  return String(data);
+};
+
+/**
  * Map mime types to their parsers.
  *
  * @type {Object}
@@ -107,6 +117,7 @@ var parse = [
 var serialize = [
   [JSON_REGEXP, JSON.stringify],
   ['application/x-www-form-urlencoded', qs.stringify],
+  ['text/html', toString],
   ['multipart/form-data', toFormData]
 ];
 

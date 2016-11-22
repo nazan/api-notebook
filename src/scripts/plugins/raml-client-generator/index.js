@@ -1,6 +1,7 @@
 /* global App */
 var _               = App._;
 var ramlParser      = require('raml-parser');
+// var ramlParser      = require('raml-1-parser');
 var authenticate    = require('./authenticate');
 var clientGenerator = require('./client-generator');
 var fromPath        = require('../../lib/from-path');
@@ -133,6 +134,7 @@ API.createClient = function (name, uri, config, done) {
 
     // Pass our url to the RAML parser for processing and transform the promise
     // back into a callback format.
+    // return ramlParser.parseRAML(xhr.responseText, {
     return ramlParser.load(xhr.responseText, uri, {
       reader: createReader(config)
     }).then(createClient, done);

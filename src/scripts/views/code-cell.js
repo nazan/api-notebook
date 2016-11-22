@@ -194,7 +194,7 @@ CodeCell.prototype.unbindEditor = function () {
  * @return {Number}
  */
 CodeCell.prototype.firstLine = function () {
-  var prevCode = this.model.collection.getPrevCode(this.model);
+  var prevCode = this.model.collection.getPrev(this.model);
 
   return prevCode ? prevCode.view.lastLine() + 1 : 1;
 };
