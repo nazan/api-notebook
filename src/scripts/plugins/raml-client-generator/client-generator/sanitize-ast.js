@@ -78,7 +78,8 @@ module.exports = function (ast) {
               'body',
               'headers',
               'description',
-              'queryParameters'
+              'queryParameters',
+              'queryString'
             ]);
 
             // Sanitize the `securedBy` method.

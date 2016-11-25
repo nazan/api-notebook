@@ -331,8 +331,9 @@ var toMethodDescription = function (nodes, method) {
 
   // If the method is a query method (GET/HEAD), set the body as a config option
   // and vise versa.
+  var queryNodes = method.queryString ? method.queryString.properties : method.queryParameters;
   if (isQuery) {
-    _.extend(bodyOptions, ramlToDocumentationFormat(method.queryParameters));
+    _.extend(bodyOptions, ramlToDocumentationFormat(queryNodes));
 
     configOptions.body = {
       '!type': 'object',
@@ -346,7 +347,7 @@ var toMethodDescription = function (nodes, method) {
 
     configOptions.query = _.extend({
       '!type': 'object'
-    }, ramlToDocumentationFormat(method.queryParameters));
+    }, ramlToDocumentationFormat(queryNodes));
   }
 
   // If the current node has baseUriParameters, show it in the documentation.

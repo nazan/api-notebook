@@ -21,7 +21,7 @@ window.extend = function (obj /*, ...source */) {
 /**
  * Simulate a keypress event enough to test CodeMirror.
  *
- * @param  {CodeMirror}    editor
+ * @param  {CodeMirror}    cm
  * @param  {String|Number} code
  * @param  {Object}        props
  */
@@ -44,7 +44,8 @@ window.fakeKey = function (cm, code, props) {
  * Test the autocompletion widget on a javascript editor instance.
  *
  * @param  {CodeMirror} editor
- * @param  {String}     value
+ * @param  {String}     text
+ * @param  {Function}   done
  * @return {Array}
  */
 window.testCompletion = function (editor, text, done) {
