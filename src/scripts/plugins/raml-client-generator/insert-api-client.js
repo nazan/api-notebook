@@ -12,7 +12,7 @@ var ITEMS_PER_PAGE = 10;
 /**
  * Create an api client cell that can load the selected api document.
  *
- * @param  {Cell}     cell
+ * @param  {App.View.EditorCell}     cell
  * @param  {String}   invoke
  * @return {Function}
  */
@@ -100,6 +100,7 @@ var selectAPIDefinition = function (done) {
       /**
        * Load all the API definitions and return the items as an array.
        *
+       * @param {Object} search
        * @param {Function} done
        */
       var loadAPIDefinitions = function (search, done) {

@@ -18,6 +18,7 @@ var FUNCTION_TYPES = {
  * Format an argument as html for the rendered documentation.
  *
  * @param  {Object} object
+ * @param  {String} key
  * @return {String}
  */
 var formatArgumentDocs = function (object, key) {
@@ -25,7 +26,7 @@ var formatArgumentDocs = function (object, key) {
   var docs   = formatDocs(object, key);
   var prefix = 'CodeMirror-documentation-description-';
 
-  // Push the type defintion into the html when a key or type exists.
+  // Push the type definition into the html when a key or type exists.
   if (key || docs.type) {
     html.push(
       '<div class="' + prefix + 'type">',
@@ -54,7 +55,7 @@ var formatArgumentDocs = function (object, key) {
   }
 
   // Iterate over the argument object and push each child definition into the
-  // html array. Ignore private defintion keys.
+  // html array. Ignore private definition keys.
   _.each(object, function (object, key) {
     if (key.charAt(0) === '!') {
       return;
@@ -83,11 +84,7 @@ var isTokenBefore = function (pos, before) {
     return true;
   }
 
-  if (pos.line === before.line && pos.ch < before.ch) {
-    return true;
-  }
-
-  return false;
+  return !!(pos.line === before.line && pos.ch < before.ch);
 };
 
 /**
@@ -116,7 +113,7 @@ var ArgumentDocs = module.exports = function (completion, data) {
   documentation.setAttribute('data-overflow-scroll', 'true');
 
   // Get the function name as the variable preceding the opening bracket.
-  var fnName = this.fnName = tokenHelpers.eatEmpty(
+  var fnName = tokenHelpers.eatEmpty(
     cm, getToken(cm, this.data.from)
   ).string;
 

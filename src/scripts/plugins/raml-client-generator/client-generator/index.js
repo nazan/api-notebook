@@ -102,7 +102,7 @@ var toString = function (data) {
 /**
  * Map mime types to their parsers.
  *
- * @type {Object}
+ * @type {Array}
  */
 var parse = [
   [JSON_REGEXP, JSON.parse],
@@ -112,7 +112,7 @@ var parse = [
 /**
  * Map mime types to their serializers.
  *
- * @type {Object}
+ * @type {Array}
  */
 var serialize = [
   [JSON_REGEXP, JSON.stringify],
@@ -341,7 +341,7 @@ var toMethodDescription = function (nodes, method) {
   } else {
     bodyOptions = {
       '!type': 'object|string',
-      '!doc':  ramlBodyToMarkdown(method.body),
+      '!doc':  ramlBodyToMarkdown(method.body)
     };
 
     configOptions.query = _.extend({
@@ -390,9 +390,7 @@ var getAllReponseHeaders = function (xhr) {
     // Make sure we have both parts of the header.
     if (header.length > 1) {
       var name  = header.shift();
-      var value = header.join(':').trim();
-
-      responseHeaders[name.toLowerCase()] = value;
+      responseHeaders[name.toLowerCase()] = header.join(':').trim();
     }
   });
 
@@ -451,7 +449,7 @@ var sanitizeOption = {
  *
  * @param  {Object}  headers
  * @param  {String}  header
- * @return {Boolean}
+ * @return {String}
  */
 var findHeader = function (headers, header) {
   header = header.toLowerCase();
@@ -488,7 +486,8 @@ var sanitizeXHR = function (xhr) {
 /**
  * Returns a function that can be used to make ajax requests.
  *
- * @param  {String}   url
+ * @param  {Object}   nodes
+ * @param  {Object}   method
  * @return {Function}
  */
 var httpRequest = function (nodes, method) {
@@ -730,7 +729,7 @@ var attachMediaTypeExtension = function (nodes, context, resource) {
  * @param  {Array}   nodes
  * @param  {Object}  resource
  * @param  {Boolean} hasMediaExtension
- * @param  {Object}  context
+ * @param  {Object}  [context]
  * @return {Object}
  */
 var newContext = function (nodes, resource, hasMediaExtension, context) {
@@ -878,6 +877,7 @@ var attachResources = function (nodes, context, resources) {
  * Generate the client object from a sanitized AST object.
  *
  * @param  {Object} ast Passed through `sanitizeAST`
+ * @param  {Object} config
  * @return {Object}
  */
 var generateClient = function (ast, config) {
