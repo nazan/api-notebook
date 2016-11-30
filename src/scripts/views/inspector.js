@@ -347,9 +347,9 @@ InspectorView.prototype.renderPreview = function () {
       html += _.escape('' + prefix);
       html += '</span>: ';
     }
-    html += '<span class="inspect" title="' + _.escape(preview) + '">';
+    html += '<p class="inspect" title="' + _.escape(preview) + '">';
     html += htmlPreview.split('\n').join('↵');
-    html += '</span>';
+    html += '</p>';
     html += '</div>';
 
     this.el.appendChild(this.previewEl = domify(html));
