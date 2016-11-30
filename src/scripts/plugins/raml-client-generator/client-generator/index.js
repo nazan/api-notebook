@@ -324,14 +324,28 @@ var toMethodDescription = function (nodes, method) {
     '!doc':  'Modify the `XMLHttpRequest` before it gets sent.'
   };
 
-  // Add documentation on header parameters.
-  configOptions.headers = _.extend({
-    '!type': 'object'
-  }, ramlToDocumentationFormat(method.headers));
-
   // If the method is a query method (GET/HEAD), set the body as a config option
   // and vise versa.
   var queryNodes = method.queryString ? method.queryString.properties : method.queryParameters;
+  var headers    = method.headers || {};
+
+  // If the method is secured by passthrough, add parameters and headers from its security scheme
+  if (method.securedBy && method.securedBy.passthrough) {
+    var passthroughScheme = nodes.client.securitySchemes.passthrough.describedBy;
+
+    // add pass through query parameters to current method query nodes
+    queryNodes = _.extend(queryNodes, passthroughScheme.queryParameters);
+
+    // add pass through headers to current method headers
+    headers = _.extend(headers, passthroughScheme.headers);
+  }
+
+  // Add documentation on header parameters.
+  configOptions.headers = _.extend({
+    '!type': 'object'
+  }, ramlToDocumentationFormat(headers));
+
+
   if (isQuery) {
     _.extend(bodyOptions, ramlToDocumentationFormat(queryNodes));
 

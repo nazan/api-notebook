@@ -151,6 +151,18 @@ securitySchemes:
             Bad token.
         403:
 
+  passthrough:
+    description: |
+      This API supports Pass Through Authentication.
+    type: Pass Through
+    describedBy:
+      queryParameters:
+        query:
+          type: string
+      headers:
+        api_key:
+          type: string
+
 securedBy: custom_scheme
 
 uses:
@@ -159,10 +171,13 @@ uses:
 
 /api:
   get:
+    securedBy: [passthrough]
     queryString:
       properties:
         start?: number
         page-size?: number
+    headers:
+      X-Api:
   post:
     body:
       application/json:
