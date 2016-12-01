@@ -53,6 +53,14 @@ API.createClient = function (name, uri, config, done) {
   config = config || {};
 
   /**
+   * Clean path when error happens while creating new client.
+   */
+  var cleanPath = function cleanPath() {
+    var path = name.split('.');
+    App._executeWindow = App._executeWindow[path[path.length - 1]] = {};
+  };
+
+  /**
    * Generate and attach the RAML client from RAML.
    *
    * @param  {Object} raml
@@ -99,10 +107,12 @@ API.createClient = function (name, uri, config, done) {
     }
   }, function (err, xhr) {
     if (err) {
+      cleanPath();
       return done(err);
     }
 
     if (Math.floor(xhr.status / 100) !== 2) {
+      cleanPath();
       return done(new Error('HTTP ' + xhr.status));
     }
 
