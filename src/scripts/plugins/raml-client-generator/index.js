@@ -130,7 +130,14 @@ API.createClient = function (name, uri, config, done) {
 
     // Pass our url to the RAML parser for processing and transform the promise
     // back into a callback format.
-    return ramlParser.loadApi(uri, ramlParserConfig).then(expandApi).then(createClient, done);
+    return ramlParser.loadApi(uri, ramlParserConfig)
+        .then(expandApi,
+            function (err) {
+                var amountOfErrors =
+                    (err.parserErrors ? ' There are ' + err.parserErrors.length + ' errors/warnings.' : '');
+                throw new Error(err.message + amountOfErrors);
+            })
+        .then(createClient, done);
   });
 
 };
