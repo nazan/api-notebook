@@ -93,6 +93,7 @@
   > .result-container
     display: table
     overflow: hidden
+    width: 100%;
     > .result-label
       display: table-cell
       color: $color-result-label
@@ -101,6 +102,13 @@
       display: table-cell
       padding: 0.5em 0.3em 0.5em 0
       overflow: hidden
+      > .inspector .preview .inspect
+        word-break: break-word;
+        word-wrap: normal;
+        position: inherit;
+        margin-bottom: 0;
+      > .inspector .children .inspector-trace
+        white-space: normal;
 
 .notebook-view > .cell-code > .cell-result-pending
   display: none

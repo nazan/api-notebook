@@ -1,6 +1,6 @@
 /* global App */
 var _               = App._;
-var ramlParser      = require('raml-parser');
+var ramlParser      = require('raml-1-parser');
 var authenticate    = require('./authenticate');
 var clientGenerator = require('./client-generator');
 var fromPath        = require('../../lib/from-path');
@@ -17,40 +17,6 @@ require('./insert-api-client');
  * @type {String}
  */
 var DESCRIPTION_PROPERTY = '!description';
-
-/**
- * Custom file reader for RAML specs.
- *
- * @param  {String}  url
- * @return {Q.defer}
- */
-var createReader = function (config) {
-  return new ramlParser.FileReader(function (url) {
-    var deferred = this.q.defer();
-
-    App.middleware.trigger('ajax', {
-      url: url,
-      proxy: config.proxy,
-      headers: {
-        'Accept': 'application/raml+yaml, */*'
-      }
-    }, function (err, xhr) {
-      if (err) {
-        return deferred.reject(err);
-      }
-
-      if (Math.floor(xhr.status / 100) !== 2) {
-        return deferred.reject(
-          new Error('Received status code ' + xhr.status + ' loading ' + url)
-        );
-      }
-
-      return deferred.resolve(xhr.responseText);
-    });
-
-    return deferred.promise;
-  });
-};
 
 /**
  * The Api object is used in the execution context.
@@ -87,14 +53,22 @@ API.createClient = function (name, uri, config, done) {
   config = config || {};
 
   /**
-   * Generate and attach the RAML client from the AST.
-   *
-   * @param  {Object} ast
+   * Clean path when error happens while creating new client.
    */
-  var createClient = function (ast) {
+  var cleanPath = function cleanPath() {
+    var path = name.split('.');
+    App._executeWindow = App._executeWindow[path[path.length - 1]] = {};
+  };
+
+  /**
+   * Generate and attach the RAML client from RAML.
+   *
+   * @param  {Object} raml
+   */
+  var createClient = function (raml) {
     try {
       fromPath(
-        App._executeWindow, name.split('.'), clientGenerator(ast, config)
+        App._executeWindow, name.split('.'), clientGenerator(raml, config)
       );
     } catch (e) {
       return done(e);
@@ -107,7 +81,23 @@ API.createClient = function (name, uri, config, done) {
   };
 
   /**
-   * Manually initialise the first ajax request to support JSON responses.
+   * API with traits and resource types expanded.
+   *
+   * @param  {Object} api
+   */
+  var expandApi = function(api) {
+    api = api.expand ? api.expand(true) : api;
+
+    var jsonOptions = {
+      serializeMetadata: false,
+      dumpSchemaContents: false,
+      rootNodeDetails: false
+    };
+    return api.toJSON(jsonOptions);
+  };
+
+  /**
+   * Manually initialize the first ajax request to support JSON responses.
    */
   return App.middleware.trigger('ajax', {
     url:   uri,
@@ -117,10 +107,12 @@ API.createClient = function (name, uri, config, done) {
     }
   }, function (err, xhr) {
     if (err) {
+      cleanPath();
       return done(err);
     }
 
     if (Math.floor(xhr.status / 100) !== 2) {
+      cleanPath();
       return done(new Error('HTTP ' + xhr.status));
     }
 
@@ -131,11 +123,21 @@ API.createClient = function (name, uri, config, done) {
       return createClient(JSON.parse(xhr.responseText));
     } catch (e) {}
 
+    var ramlParserConfig = {
+      attributeDefaults: true,
+      rejectOnErrors:    true
+    };
+
     // Pass our url to the RAML parser for processing and transform the promise
     // back into a callback format.
-    return ramlParser.load(xhr.responseText, uri, {
-      reader: createReader(config)
-    }).then(createClient, done);
+    return ramlParser.loadApi(uri, ramlParserConfig)
+        .then(expandApi,
+            function (err) {
+                var amountOfErrors =
+                    (err.parserErrors ? ' There are ' + err.parserErrors.length + ' errors/warnings.' : '');
+                throw new Error(err.message + amountOfErrors);
+            })
+        .then(createClient, done);
   });
 
 };
@@ -345,7 +347,7 @@ API.authenticate[DESCRIPTION_PROPERTY] = {
 /**
  * Alter the context to include the RAML client generator.
  *
- * @param {Object}   data
+ * @param {Object}   context
  * @param {Function} next
  */
 exports['sandbox:context'] = function (context, next) {

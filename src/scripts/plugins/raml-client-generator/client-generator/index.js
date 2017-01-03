@@ -90,9 +90,19 @@ var toFormData = function (data) {
 };
 
 /**
+ * Transform a data object into a String.
+ *
+ * @param  {Object}   data
+ * @return {String}
+ */
+var toString = function (data) {
+  return String(data);
+};
+
+/**
  * Map mime types to their parsers.
  *
- * @type {Object}
+ * @type {Array}
  */
 var parse = [
   [JSON_REGEXP, JSON.parse],
@@ -102,11 +112,12 @@ var parse = [
 /**
  * Map mime types to their serializers.
  *
- * @type {Object}
+ * @type {Array}
  */
 var serialize = [
   [JSON_REGEXP, JSON.stringify],
   ['application/x-www-form-urlencoded', qs.stringify],
+  ['text/html', toString],
   ['multipart/form-data', toFormData]
 ];
 
@@ -313,15 +324,30 @@ var toMethodDescription = function (nodes, method) {
     '!doc':  'Modify the `XMLHttpRequest` before it gets sent.'
   };
 
+  // If the method is a query method (GET/HEAD), set the body as a config option
+  // and vise versa.
+  var queryNodes = method.queryString ? method.queryString.properties : method.queryParameters;
+  var headers    = method.headers || {};
+
+  // If the method is secured by passthrough, add parameters and headers from its security scheme
+  if (method.securedBy && method.securedBy.passthrough) {
+    var passthroughScheme = nodes.client.securitySchemes.passthrough.describedBy;
+
+    // add pass through query parameters to current method query nodes
+    queryNodes = _.extend(queryNodes, passthroughScheme.queryParameters);
+
+    // add pass through headers to current method headers
+    headers = _.extend(headers, passthroughScheme.headers);
+  }
+
   // Add documentation on header parameters.
   configOptions.headers = _.extend({
     '!type': 'object'
-  }, ramlToDocumentationFormat(method.headers));
+  }, ramlToDocumentationFormat(headers));
 
-  // If the method is a query method (GET/HEAD), set the body as a config option
-  // and vise versa.
+
   if (isQuery) {
-    _.extend(bodyOptions, ramlToDocumentationFormat(method.queryParameters));
+    _.extend(bodyOptions, ramlToDocumentationFormat(queryNodes));
 
     configOptions.body = {
       '!type': 'object',
@@ -330,12 +356,12 @@ var toMethodDescription = function (nodes, method) {
   } else {
     bodyOptions = {
       '!type': 'object|string',
-      '!doc':  ramlBodyToMarkdown(method.body),
+      '!doc':  ramlBodyToMarkdown(method.body)
     };
 
     configOptions.query = _.extend({
       '!type': 'object'
-    }, ramlToDocumentationFormat(method.queryParameters));
+    }, ramlToDocumentationFormat(queryNodes));
   }
 
   // If the current node has baseUriParameters, show it in the documentation.
@@ -379,9 +405,7 @@ var getAllReponseHeaders = function (xhr) {
     // Make sure we have both parts of the header.
     if (header.length > 1) {
       var name  = header.shift();
-      var value = header.join(':').trim();
-
-      responseHeaders[name.toLowerCase()] = value;
+      responseHeaders[name.toLowerCase()] = header.join(':').trim();
     }
   });
 
@@ -440,7 +464,7 @@ var sanitizeOption = {
  *
  * @param  {Object}  headers
  * @param  {String}  header
- * @return {Boolean}
+ * @return {String}
  */
 var findHeader = function (headers, header) {
   header = header.toLowerCase();
@@ -477,7 +501,8 @@ var sanitizeXHR = function (xhr) {
 /**
  * Returns a function that can be used to make ajax requests.
  *
- * @param  {String}   url
+ * @param  {Object}   nodes
+ * @param  {Object}   method
  * @return {Function}
  */
 var httpRequest = function (nodes, method) {
@@ -719,7 +744,7 @@ var attachMediaTypeExtension = function (nodes, context, resource) {
  * @param  {Array}   nodes
  * @param  {Object}  resource
  * @param  {Boolean} hasMediaExtension
- * @param  {Object}  context
+ * @param  {Object}  [context]
  * @return {Object}
  */
 var newContext = function (nodes, resource, hasMediaExtension, context) {
@@ -867,6 +892,7 @@ var attachResources = function (nodes, context, resources) {
  * Generate the client object from a sanitized AST object.
  *
  * @param  {Object} ast Passed through `sanitizeAST`
+ * @param  {Object} config
  * @return {Object}
  */
 var generateClient = function (ast, config) {

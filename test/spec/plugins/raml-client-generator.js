@@ -24,79 +24,83 @@ describe('RAML Client Generator Plugin', function () {
     });
   });
 
-  describe('Base URI Version', function () {
-    var server;
+  ['/base-version.raml', '/version10/base-version.raml'].forEach(function (path) {
+    describe('Base URI Version', function () {
+      var server;
 
-    beforeEach(function (done) {
-      sandbox.execute('API.createClient("baseVersion", "' + FIXTURES_URL + '/base-version.raml");', function (err) {
-        server = sinon.fakeServer.create();
-        done(err);
-      });
-    });
-
-    afterEach(function () {
-      server.restore();
-    });
-
-    it('should inject the version into the base uri automatically', function (done) {
-      server.respondWith('GET', 'http://example.com/v2/', [200, {
-        'Content-Type': 'text/html'
-      }, 'success']);
-
-      sandbox.execute('baseVersion("/").get();', function (err, exec) {
-        expect(exec.result.body).to.equal('success');
-        expect(exec.result.status).to.equal(200);
-        return done();
+      beforeEach(function (done) {
+        sandbox.execute('API.createClient("baseVersion", "' + FIXTURES_URL + path + '");', function (err) {
+          server = sinon.fakeServer.create();
+          done(err);
+        });
       });
 
-      server.respond();
+      afterEach(function () {
+        server.restore();
+      });
+
+      it('should inject the version into the base uri automatically', function (done) {
+        server.respondWith('GET', 'http://example.com/v2/', [200, {
+          'Content-Type': 'text/html'
+        }, 'success']);
+
+        sandbox.execute('baseVersion("/").get();', function (err, exec) {
+          expect(exec.result.body).to.equal('success');
+          expect(exec.result.status).to.equal(200);
+          return done();
+        });
+
+        server.respond();
+      });
     });
   });
 
-  describe('Base URI Parameters', function () {
-    var server;
+  ['/base-uri-parameters.raml', '/version10/base-uri-parameters.raml'].forEach(function (path) {
+    describe('Base URI Parameters', function () {
+      var server;
 
-    beforeEach(function (done) {
-      sandbox.execute('API.createClient("baseUriParameters", "' + FIXTURES_URL + '/base-uri-parameters.raml");', function (err) {
-        server = sinon.fakeServer.create();
-        done(err);
-      });
-    });
-
-    afterEach(function () {
-      server.restore();
-    });
-
-    it('should pass baseUriParameters with root function', function (done) {
-      server.respondWith('GET', 'http://apac.example.com/test', [200, {
-        'Content-Type': 'text/html'
-      }, 'success']);
-
-      sandbox.execute('baseUriParameters("/test").get(null, { baseUriParameters: { zone: "apac" } });', function (err, exec) {
-        expect(exec.result.body).to.equal('success');
-        expect(exec.result.status).to.equal(200);
-        return done();
+      beforeEach(function (done) {
+        sandbox.execute('API.createClient("baseUriParameters", "' + FIXTURES_URL + path + '");', function (err) {
+          server = sinon.fakeServer.create();
+          done(err);
+        });
       });
 
-      server.respond();
-    });
-
-    it('should pass baseUriParameters with pre-defined routes', function (done) {
-      server.respondWith('GET', 'http://apac.example.com/api', [200, {
-        'Content-Type': 'text/html'
-      }, 'success']);
-
-      sandbox.execute('baseUriParameters.api.get(null, { baseUriParameters: { zone: "apac" } });', function (err, exec) {
-        expect(exec.result.body).to.equal('success');
-        expect(exec.result.status).to.equal(200);
-        return done();
+      afterEach(function () {
+        server.restore();
       });
 
-      server.respond();
+      it('should pass baseUriParameters with root function', function (done) {
+        server.respondWith('GET', 'http://apac.example.com/test', [200, {
+          'Content-Type': 'text/html'
+        }, 'success']);
+
+        sandbox.execute('baseUriParameters("/test").get(null, { baseUriParameters: { zone: "apac" } });', function (err, exec) {
+          expect(exec.result.body).to.equal('success');
+          expect(exec.result.status).to.equal(200);
+          return done();
+        });
+
+        server.respond();
+      });
+
+      it('should pass baseUriParameters with pre-defined routes', function (done) {
+        server.respondWith('GET', 'http://apac.example.com/api', [200, {
+          'Content-Type': 'text/html'
+        }, 'success']);
+
+        sandbox.execute('baseUriParameters.api.get(null, { baseUriParameters: { zone: "apac" } });', function (err, exec) {
+          expect(exec.result.body).to.equal('success');
+          expect(exec.result.status).to.equal(200);
+          return done();
+        });
+
+        server.respond();
+      });
     });
   });
 
-  describe('Example RAML document', function () {
+  describe('Example RAML 0.8 document', function () {
     var server;
 
     beforeEach(function (done) {
@@ -116,7 +120,7 @@ describe('RAML Client Generator Plugin', function () {
           var response = [
             200,
             {
-              'Content-Type': 'test/html'
+              'Content-Type': 'text/html'
             },
             'Example Response Text'
           ];
@@ -126,12 +130,13 @@ describe('RAML Client Generator Plugin', function () {
           }
 
           // Only respond when the request matches.
-          if (request.method === method && request.url === 'http://example.com' + route) {
+          if (request.method.toUpperCase() === method.toUpperCase() && request.url === 'http://example.com' + route) {
             return request.respond.apply(request, response);
           }
         });
 
         sandbox.execute(execute, function (err, exec) {
+          if (exec.isError) { console.error(exec.result); }
           expect(exec.isError).to.be.false;
           expect(exec.result).to.include.keys('body', 'headers', 'status');
           expect(exec.result.status).to.equal(200);
@@ -338,7 +343,7 @@ describe('RAML Client Generator Plugin', function () {
             it(
               'should be able to attach custom headers to ' + method + ' requests',
               testRequestHeaders(
-                '("/test/route").' + method + '(null, { headers: { "X-Test-Header": "Test" } })',
+                '("/test/route").' + method + '(null, { headers: { "X-Test-Header": "Test", "Content-Type": "text/html" } })',
                 method,
                 '/test/route',
                 {
@@ -396,7 +401,7 @@ describe('RAML Client Generator Plugin', function () {
         });
       });
 
-      describe('Media Type Extension', function () {
+      describe.skip('Media Type Extension', function () {
         App._.each(methods, function (method) {
           describe(method.toUpperCase(), function () {
             it(
@@ -532,7 +537,7 @@ describe('RAML Client Generator Plugin', function () {
             it(
               'should be able to pass custom request bodies with ' + method + ' requests',
               testRequestBody(
-                '.collection.collectionId("123")', method, '/collection/123', 'Test data'
+                '.collection.collectionId("123")', method, '/collection/123', '{"result": "{\"result\": \"Test data\"}"}'
               )
             );
           });
@@ -587,7 +592,7 @@ describe('RAML Client Generator Plugin', function () {
             it(
               'should be able to attach custom headers to ' + method + ' requests',
               testRequestHeaders(
-                '.collection.collectionId("123").' + method + '(null, { headers: { "X-Test-Header": "Test" } })',
+                '.collection.collectionId("123").' + method + '(null, { headers: { "X-Test-Header": "Test", "Content-Type": "text/html" } })',
                 method,
                 '/collection/123',
                 {
@@ -815,6 +820,147 @@ describe('RAML Client Generator Plugin', function () {
 
       it('should autocomplete with combined text and variables', function (done) {
         testAutocomplete('example["~"]("123").', function (results) {
+          expect(results).to.include.members(['get']);
+          return done();
+        });
+      });
+    });
+  });
+
+  describe('Example RAML 1.0 document', function () {
+    var server;
+
+    beforeEach(function (done) {
+      sandbox.execute('API.createClient("example10", "' + FIXTURES_URL + '/version10/example.raml");', function (err) {
+        server = sinon.fakeServer.create();
+        return done(err);
+      });
+    });
+
+    afterEach(function () {
+      server.restore();
+    });
+
+    describe('Predefined Routes', function () {
+      it('should have defined a normal route', function (done) {
+        sandbox.execute('example10.songs;', function (err, exec) {
+          expect(exec.result).to.be.a('function');
+          expect(exec.result).to.include.keys('get', 'post');
+          return done(err);
+        });
+      });
+
+      it('should handle route name clashes with variables', function (done) {
+        sandbox.execute('example10.songs("id");', function (err, exec) {
+          expect(exec.result).to.include.keys('get')
+              .and.not.include.keys('put', 'patch', 'delete', 'post');
+          return done(err);
+        });
+      });
+
+      it('should be able to nest routes', function (done) {
+        sandbox.execute('example10.songs.songId;', function (err, exec) {
+          expect(exec.result).to.be.a('function');
+          return done(err);
+        });
+      });
+
+      it('should be able to add routes with combined text and variables', function (done) {
+        sandbox.execute('example10.album;', function (err, exec) {
+          expect(exec.result).to.be.a('function');
+          return done(err);
+        });
+      });
+
+      it('should be able to add routes with mixed text and nodes with invalid variable text', function (done) {
+        sandbox.execute('example10["~"];', function (err, exec) {
+          expect(exec.result).to.be.a('function');
+          return done(err);
+        });
+      });
+    });
+
+    describe('Completion Support', function () {
+      var view;
+
+      var testAutocomplete = function (text, done) {
+        return testCompletion(view.editor, text, done);
+      };
+
+      beforeEach(function () {
+        App.middleware.register(functionPropertyFilterPlugin);
+
+        view = new App.View.CodeCell();
+
+        view.notebook = {
+          sandbox: sandbox,
+          completionOptions: {
+            window: sandbox.window
+          }
+        };
+
+        view.model.collection = {
+          codeIndexOf: sinon.stub().returns(0),
+          getNext:     sinon.stub().returns(undefined),
+          getPrev:     sinon.stub().returns(undefined)
+        };
+
+        view.render().appendTo(fixture);
+      });
+
+      afterEach(function () {
+        App.middleware.deregister(functionPropertyFilterPlugin);
+
+        view.remove();
+      });
+
+      it('should autocomplete the root function', function (done) {
+        testAutocomplete('example10("/albums").', function (results) {
+          expect(results).to.include.members(['get']);
+          return done();
+        });
+      });
+
+      it('should autocomplete function properties', function (done) {
+        testAutocomplete('example10.api.', function (results) {
+          expect(results).to.include.members(['get', 'post']);
+          return done();
+        });
+
+        testAutocomplete('example10.entry.', function (results) {
+          expect(results).to.include.members(['get', 'post']);
+          return done();
+        });
+
+        testAutocomplete('example10.songs.', function (results) {
+          expect(results).to.include.members(['get', 'post']);
+          return done();
+        });
+      });
+
+      it('should autocomplete variable route', function (done) {
+        testAutocomplete('example10.songs("123").', function (results) {
+          expect(results).to.include.members(['get']);
+          return done();
+        });
+      });
+
+      it('should autocomplete nested variable routes', function (done) {
+        testAutocomplete('example10.songs.songId("123").', function (results) {
+          expect(results).to.include.members(['get']);
+          return done();
+        });
+      });
+
+      it('should autocomplete with combined text and variables', function (done) {
+        testAutocomplete('example10.album("123", "456").', function (results) {
+          expect(results).to.include.members(['get']);
+          return done();
+        });
+      });
+
+      it('should autocomplete with combined text and variables', function (done) {
+        testAutocomplete('example10["~"]("123").', function (results) {
           expect(results).to.include.members(['get']);
           return done();
         });

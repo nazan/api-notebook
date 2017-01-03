@@ -185,45 +185,54 @@ describe('Code Cell', function () {
           view.execute();
         });
 
-        it('should have a failover system in case async is never resolved', function (done) {
-          var spy   = sinon.spy(view, 'change');
-          var code  = 'var done = async();';
-          var clock = sinon.useFakeTimers();
+        describe('Execute Code using clock', function () {
+          var clock;
+          beforeEach(function() {
+            clock = sinon.useFakeTimers();
+          });
 
-          view.on('execute', function (view, data) {
+          afterEach(function() {
             clock.restore();
-            expect(spy).to.have.been.calledOnce;
-            expect(view.model.get('value')).to.equal(code);
-            done();
           });
 
-          view.setValue(code);
-          view.execute();
+          it('should have a failover system in case async is never resolved', function (done) {
+            var spy   = sinon.spy(view, 'change');
+            var code  = 'var done = async();';
+            view.on('execute', function (view, data) {
+              clock.restore();
+              expect(spy).to.have.been.calledOnce;
+              expect(view.model.get('value')).to.equal(code);
+              done();
+            });
 
-          App.nextTick(function () {
-            clock.tick(2500);
+            view.setValue(code);
+            view.execute();
+
+            App.nextTick(function () {
+              clock.tick(60000);
+              expect(spy).to.have.been.called;
+            });
           });
-        });
 
-        it('should be able to change the timeout on the failover system', function (done) {
-          var spy   = sinon.spy(view, 'change');
-          var code  = 'timeout(5000);\nvar done = async();';
-          var clock = sinon.useFakeTimers();
+          it('should be able to change the timeout on the failover system', function (done) {
+            var spy   = sinon.spy(view, 'change');
+            var code  = 'timeout(5000);\nvar done = async();';
+            view.on('execute', function (view, data) {
+              clock.restore();
+              expect(spy).to.have.been.calledOnce;
+              expect(view.model.get('value')).to.equal(code);
+              done();
+            });
 
-          view.on('execute', function (view, data) {
-            clock.restore();
-            expect(spy).to.have.been.calledOnce;
-            expect(view.model.get('value')).to.equal(code);
-            done();
-          });
+            view.setValue(code);
+            view.execute();
 
-          view.setValue(code);
-          view.execute();
-
-          App.nextTick(function () {
-            clock.tick(2500);
-            expect(spy).to.not.have.been.called;
-            clock.tick(3000);
+            App.nextTick(function () {
+              clock.tick(2500);
+              expect(spy).to.not.have.been.called;
+              clock.tick(3000);
+              expect(spy).to.have.been.called;
+            });
           });
         });
 

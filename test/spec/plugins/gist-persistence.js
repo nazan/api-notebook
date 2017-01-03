@@ -71,6 +71,8 @@ describe('Gist Persistence Plugin', function () {
       ]
     );
 
+    App.persistence.set('clientId', clientId);
+
     App.persistence.authenticate(function (err) {
       expect(err).to.not.exist;
       expect(App.persistence.get('userId')).to.equal(userId);

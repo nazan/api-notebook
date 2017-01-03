@@ -1,5 +1,7 @@
 # API Notebook
 
+[![Build Status](https://travis-ci.org/mulesoft/api-notebook.svg)](https://travis-ci.org/mulesoft/api-notebook)
+
 Interactive API notebook - [demo](http://apinotebook.com).
 
 ## Development
