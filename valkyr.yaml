@@ -1,0 +1,6 @@
+asset: api-notebook-service
+product: api-tooling
+strategy: node
+requires:
+  deployment: true
+  staticAsset: true
