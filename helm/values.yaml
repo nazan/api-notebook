@@ -1,0 +1,10 @@
+image:
+  registry: devdocker.mulesoft.com:18078
+  org: api-platform
+  name: api-notebook
+  tag: 1.1.71-patch.1-onprem
+
+service:
+  replicaCount: 1
+  maxSurge: 1
+  maxUnavailable: 0

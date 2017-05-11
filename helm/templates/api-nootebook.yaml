@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-notebook-service
+  namespace: api-tooling
+  labels:
+    name: api-notebook-service
+    k8s-app: api-notebook
+spec:
+{{- if .Values.service.external }}
+  type: LoadBalancer
+{{- else }}
+  type: NodePort
+{{- end}}
+  ports:
+    - name: api-notebook-service-http
+      port: 3000
+      nodePort: 30002
+  selector:
+    app: api-notebook-service
+    name: api-notebook-service
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-notebook-service
+  namespace: api-tooling
+  labels:
+    app: api-notebook-service
+    name: api-notebook-service
+    k8s-app: api-notebook
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: {{default 1 .Values.service.maxSurge}}
+      maxUnavailable: {{default 0 .Values.service.maxUnavailable}}
+    type: RollingUpdate
+  replicas: {{default 1 .Values.service.replicaCount}}
+  template:
+    metadata:
+      name: api-notebook-service
+      namespace: api-tooling
+      labels:
+        app: api-notebook-service
+        name: api-notebook-service
+        k8s-app: api-notebook
+    spec:
+      containers:
+        - name: api-notebook-service
+          image: "{{.Values.image.registry}}/{{.Values.image.org}}/{{.Values.image.name}}:{{default "latest" .Values.image.tag}}"
+          imagePullPolicy: Always
+      volumes:
+        - name: api-notebook-service-storage
+          emptyDir: {}
+      imagePullSecrets:
+        - name: devdocker-registrykey

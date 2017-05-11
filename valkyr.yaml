@@ -1,6 +1,7 @@
-asset: api-notebook-service
+asset: api-notebook
+credentialsPrefix: exchange
 product: api-tooling
 strategy: node
 requires:
+  db: false
   deployment: true
-  staticAsset: true
