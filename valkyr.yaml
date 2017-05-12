@@ -3,6 +3,8 @@ credentialsPrefix: exchange
 product: api-tooling
 strategy: node
 version: 1.2
+contains:
+  helmChart: true
 requires:
   db: false
   deployment: true
