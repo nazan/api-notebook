@@ -37,6 +37,7 @@
     "dombars": "~0.5.2",
     "dombarsify": "~0.0.3",
     "envify-config": "~0.0.1",
+    "git-rev-cli": "~0.1.0",
     "grunt": "~0.4.2",
     "grunt-browserify": "^4.0.1",
     "grunt-cli": "~0.1.11",
@@ -60,7 +61,10 @@
     "build": "grunt build",
     "grunt": "grunt",
     "start": "grunt",
-    "test": "grunt test"
+    "test-local": "grunt test",
+    "git:version": "git-rev",
+    "grunt:dist": "grunt dist",
+    "test": "true"
   },
   "repository": {
     "type": "git",

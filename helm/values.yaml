@@ -1,8 +1,10 @@
 image:
   registry: devdocker.mulesoft.com:18078
-  org: api-platform
+  org: mulesoft
   name: api-notebook
-  tag: 1.1.71-patch.1-onprem
+  tag: latest
+  pullPolicy: Always
+
 
 service:
   replicaCount: 1
