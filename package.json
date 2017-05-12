@@ -63,7 +63,6 @@
     "start": "grunt",
     "test-local": "grunt test",
     "git:version": "git-rev",
-    "grunt:dist": "grunt dist",
     "test": "true"
   },
   "repository": {

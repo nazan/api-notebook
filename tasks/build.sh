@@ -31,8 +31,6 @@ fi
 # Git revision
 npm run git:version -- dist/VERSION
 
-npm run grunt:dist
-
 # Copy assets
 cp -r package.json dist/
 
