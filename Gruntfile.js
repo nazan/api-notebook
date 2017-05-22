@@ -21,6 +21,7 @@ module.exports = function (grunt) {
   var browserifyTransform = [];
 
   if (!DEV) {
+    browserifyTransform.push('hbsify');
     browserifyTransform.push('uglifyify');
   }
 

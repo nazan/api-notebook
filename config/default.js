@@ -1,6 +1,6 @@
 module.exports = {
   application: {
-    url:           'http://localhost:3000',
+    url:           'http://localhost:3000/notebooks/',
     title:         'API Notebook',
     oauthCallback: '/authenticate/oauth.html'
   },
