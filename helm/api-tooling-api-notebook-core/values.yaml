@@ -1,7 +1,7 @@
 image:
   registry: devdocker.mulesoft.com:18078
   org: mulesoft
-  name: api-notebook
+  name: api-tooling-api-notebook-core
   tag: latest
   pullPolicy: Always
 
