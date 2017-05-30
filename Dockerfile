@@ -13,7 +13,7 @@ RUN groupadd -r app && useradd -r -g app app
 RUN mkdir -p /usr/src/app && chown -R app:app /usr/src/app
 WORKDIR /usr/src/app
 COPY ./artifacts /usr/src/app/
-COPY Dockerfile.d/server.py /usr/src/app/
+COPY server.py /usr/src/app/
 
 EXPOSE 3000
 
