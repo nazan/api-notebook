@@ -125,7 +125,7 @@ API.createClient = function (name, uri, config, done) {
 
     var ramlParserConfig = {
       attributeDefaults: true,
-      rejectOnErrors:    true
+      rejectOnErrors:    false
     };
 
     // Pass our url to the RAML parser for processing and transform the promise
