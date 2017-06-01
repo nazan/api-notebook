@@ -1,0 +1,33 @@
+{
+  "application": {
+    "url":           "http://a7288ea493fbe11e7b00e124310abb8f-745471466.us-east-1.elb.amazonaws.com:3000/notebooks/",
+    "title":         "API Notebook",
+    "oauthCallback": "/authenticate/oauth.html"
+  },
+  "embed": {
+    "script": "http://a7288ea493fbe11e7b00e124310abb8f-745471466.us-east-1.elb.amazonaws.com:3000/scripts/embed.js"
+  },
+  "plugins": {
+    "ramlClient": {
+      "oauth1": {
+        "https://api.twitter.com/oauth/authorize": {
+          "consumerKey": "abc",
+          "consumerSecret": "123"
+        }
+      },
+      "oauth2": {
+        "https://api.instagram.com/oauth/authorize": {
+          "clientId": "abc",
+          "clientSecret": "123"
+        }
+      }
+    },
+    "proxy": {
+      "url": "/proxy"
+    },
+    "github": {
+      "clientId": "abc",
+      "clientSecret": "123"
+    }
+  }
+}
