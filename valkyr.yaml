@@ -5,8 +5,6 @@ asset: core
 credentialsPrefix: exchange
 strategy: node
 version: 1.2
-contains:
-  helmChart: true
 requires:
   db: false
   deployment: false
