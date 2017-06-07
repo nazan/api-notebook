@@ -163,7 +163,9 @@ module.exports = function (grunt) {
      */
     shell: {
       'mocha-browser': {
-        command: './node_modules/.bin/mocha-phantomjs test/index.html'
+        command: 'phantomjs --web-security=false ' +
+        './node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js test/index.html spec ' +
+        '\'{ \"ignoreResourceErrors\": true }\''
       },
       'build-gh-pages': {
         command: 'NODE_ENV="gh-pages" grunt build'

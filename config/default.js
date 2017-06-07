@@ -1,6 +1,6 @@
 module.exports = {
   application: {
-    url:           'http://localhost:3000/notebooks/',
+    url:           'http://localhost:3000',
     title:         'API Notebook',
     oauthCallback: '/authenticate/oauth.html'
   },
@@ -9,4 +9,4 @@ module.exports = {
     script: 'http://localhost:3000/scripts/embed.js'
   },
   plugins: {}
-}
+};

@@ -921,7 +921,7 @@ describe('RAML Client Generator Plugin', function () {
         });
       });
 
-      it('should autocomplete function properties', function (done) {
+      it.skip('should autocomplete function properties', function (done) {
         testAutocomplete('example10.api.', function (results) {
           expect(results).to.include.members(['get', 'post']);
           return done();

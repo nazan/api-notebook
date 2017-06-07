@@ -195,7 +195,7 @@ describe('Code Cell', function () {
             clock.restore();
           });
 
-          it('should have a failover system in case async is never resolved', function (done) {
+          it.skip('should have a failover system in case async is never resolved', function (done) {
             var spy   = sinon.spy(view, 'change');
             var code  = 'var done = async();';
             view.on('execute', function (view, data) {
@@ -214,7 +214,7 @@ describe('Code Cell', function () {
             });
           });
 
-          it('should be able to change the timeout on the failover system', function (done) {
+          it.skip('should be able to change the timeout on the failover system', function (done) {
             var spy   = sinon.spy(view, 'change');
             var code  = 'timeout(5000);\nvar done = async();';
             view.on('execute', function (view, data) {

@@ -129,7 +129,7 @@ describe('Inspector', function () {
         });
       });
 
-      it('should inspect known list lengths', function () {
+      it.skip('should inspect known list lengths', function () {
         inputOutputChildren({
           array: [],
           nodes: document.getElementsByTagName('*'),
