@@ -19,7 +19,6 @@ grunt
 open test/index.html
 
 # Run headless tests
-npm install -g phantomjs-prebuilt
 grunt test
 ```
 
