@@ -62,9 +62,8 @@
     "build": "grunt build",
     "grunt": "grunt",
     "start": "grunt",
-    "test-local": "grunt test",
     "git:version": "git-rev",
-    "test": "true"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
