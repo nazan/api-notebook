@@ -163,7 +163,7 @@ module.exports = function (grunt) {
      */
     shell: {
       'mocha-browser': {
-        command: 'phantomjs --web-security=false ' +
+        command: './node_modules/phantomjs-prebuilt/bin/phantomjs --web-security=false ' +
         './node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js test/index.html spec ' +
         '\'{ \"ignoreResourceErrors\": true }\''
       },
