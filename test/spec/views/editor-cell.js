@@ -71,23 +71,26 @@ describe('Editor Cell', function () {
       });
 
       // Keyboard shortcuts need to be tested across browser
-      describe('Keyboard Shortcuts', function () {
+      describe.only('Keyboard Shortcuts', function () {
         var UP     = 38;
         var DOWN   = 40;
         var ENTER  = 13;
         var DELETE = 8;
+        var isMac = /Mac/.test(navigator.platform);
+        var altMetaOrAltCtrl = isMac ? { altKey: true, metaKey: true } : { altKey: true, ctrlKey: true };
+        var metaOrCtrl = isMac ? { metaKey: true } : { ctrlKey: true };
 
-        it('Move Cell Up (`Cmd-Alt-Up`)', function () {
+        it('Move Cell Up (`' + (isMac ? 'Cmd' : 'Ctrl') + '-Alt-Up`)', function () {
           var spy = sinon.spy();
           view.on('moveUp', spy);
-          fakeKey(editor, UP, { altKey: true, metaKey: true });
+          fakeKey(editor, UP, altMetaOrAltCtrl);
           expect(spy).to.have.been.calledOnce;
         });
 
-        it('Move Cell Down (`Cmd-Alt-Down`)', function () {
+        it('Move Cell Down (`' + (isMac ? 'Cmd' : 'Ctrl') + '-Alt-Down`)', function () {
           var spy = sinon.spy();
           view.on('moveDown', spy);
-          fakeKey(editor, DOWN, { altKey: true, metaKey: true });
+          fakeKey(editor, DOWN, altMetaOrAltCtrl);
           expect(spy).to.have.been.calledOnce;
         });
 
@@ -98,26 +101,26 @@ describe('Editor Cell', function () {
           expect(spy).to.have.been.calledOnce;
         });
 
-        it('Delete Cell (`Cmd-Delete`)', function () {
+        it('Delete Cell (`' + (isMac ? 'Cmd' : 'Ctrl') + '-Delete`)', function () {
           var spy = sinon.spy();
           view.on('remove', spy);
-          fakeKey(editor, DELETE, { metaKey: true });
+          fakeKey(editor, DELETE, metaOrCtrl);
           expect(spy).to.have.been.calledOnce;
         });
 
-        it('Switch Cell (`Cmd-Alt-B`)', function () {
+        it('Switch Cell (`' + (isMac ? 'Cmd' : 'Ctrl') + '-Alt-B`)', function () {
           var spy = sinon.spy();
           view.on('switch', spy);
-          fakeKey(editor, 'B', { metaKey: true, altKey: true });
+          fakeKey(editor, 'B', altMetaOrAltCtrl);
           expect(spy).to.have.been.calledOnce;
         });
 
-        it('New Line Below (`Cmd-Enter`)', function () {
+        it('New Line Below (`' + (isMac ? 'Cmd' : 'Ctrl') + '-Enter`)', function () {
           editor.setValue('var test = true;');
           editor.setCursor({ line: 0, ch: 5 });
 
           expect(editor.getValue()).to.equal('var test = true;');
-          fakeKey(editor, ENTER, { metaKey: true });
+          fakeKey(editor, ENTER, metaOrCtrl);
           expect(editor.getValue()).to.equal('var test = true;\n');
         });
       });
