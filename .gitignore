@@ -5,6 +5,5 @@ build
 .env
 output
 artifacts
-config/runtime.json
 *.iml
 .idea
