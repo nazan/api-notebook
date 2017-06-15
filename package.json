@@ -1,6 +1,6 @@
 {
   "name": "api-tooling-api-notebook-core",
-  "version": "1.2.0",
+  "version": "1.2.47",
   "description": "Executable JavaScript environment for running API examples.",
   "private": true,
   "browserify": {
