@@ -1,11 +1,11 @@
 {
   "application": {
-    "url":           "http://aab63344e4f6f11e78d7e120b24dce17-774208647.us-east-1.elb.amazonaws.com:3000",
+    "url":           "https://api-notebook.anypoint.mulesoft.com",
     "title":         "API Notebook",
     "oauthCallback": "/authenticate/oauth.html"
   },
   "embed": {
-    "script": "http://aab63344e4f6f11e78d7e120b24dce17-774208647.us-east-1.elb.amazonaws.com:3000/scripts/embed.js"
+    "script": "https://api-notebook.anypoint.mulesoft.com/scripts/embed.js"
   },
   "locals": {
     "googleAnalytics": {
