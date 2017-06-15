@@ -64,7 +64,7 @@
     "grunt": "grunt",
     "start": "grunt",
     "git:version": "git-rev",
-    "test": "true"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
