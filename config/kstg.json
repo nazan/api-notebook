@@ -1,11 +1,11 @@
 {
   "application": {
-    "url":           "http://a1bf4b1e74c7d11e789ad12cea9585b5-321873604.us-east-1.elb.amazonaws.com:3000",
+    "url":           "http://api-notebook.ue1.kstg.k8s.stgx.msap.io",
     "title":         "API Notebook",
     "oauthCallback": "/authenticate/oauth.html"
   },
   "embed": {
-    "script": "http://a1bf4b1e74c7d11e789ad12cea9585b5-321873604.us-east-1.elb.amazonaws.com:3000/scripts/embed.js"
+    "script": "http://api-notebook.ue1.kstg.k8s.stgx.msap.io/scripts/embed.js"
   },
   "locals": {
     "googleAnalytics": false
