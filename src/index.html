@@ -14,20 +14,6 @@
 
       // Generate a regular notebook with all the injected plugins.
       new Notebook(document.body, {
-        inject: [
-          'plugins/proxy.js',
-          'plugins/gist-persistence.js',
-          'plugins/filter-properties.js',
-          'plugins/raml-client-generator.js',
-          'plugins/function-property-filter.js'
-        ],
-        exec: [
-          'App.middleware.register(proxyPlugin);',
-          'App.middleware.register(gistPersistencePlugin);',
-          'App.middleware.register(filterPropertiesPlugin);',
-          'App.middleware.register(ramlClientGeneratorPlugin);',
-          'App.middleware.register(functionPropertyFilterPlugin);'
-        ].join('\n'),
         config: {
           style: [
             'body { padding: 1em; }',

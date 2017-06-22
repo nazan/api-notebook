@@ -220,6 +220,10 @@ var ramlBodyToMarkdown = function (body) {
         var example = contentType.example || userfriendlifyExamples(contentType.examples);
         if (typeof example !== 'string') {
           example = JSON.stringify(example, null, 2);
+        } else {
+          try {
+            example = JSON.stringify(JSON.parse(example), null, 2);
+          } catch (e) {}
         }
 
         documentation.push(
@@ -233,7 +237,8 @@ var ramlBodyToMarkdown = function (body) {
     if (contentType.schema) {
       documentation.push(
         '**Schema:**',
-        '```\n' + contentType.schema + '\n```'
+        '**' + contentType.schema + '**',
+        '```\n' + contentType.schemaContent + '\n```'
       );
     }
   });
