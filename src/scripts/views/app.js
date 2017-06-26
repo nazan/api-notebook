@@ -35,23 +35,16 @@ var App = module.exports = View.extend({
  */
 App.prototype.events = {
   // Block clicks on a disabled button.
-  'click .toolbar-buttons button': function (e) {
-    var node = e.target;
-
-    while (node.tagName !== 'BUTTON') {
-      node = node.parentNode;
-    }
-
-    if (node.classList.contains('btn-disabled')) {
-      e.stopImmediatePropagation();
-    }
-  },
+  'click .toolbar-buttons button': 'blurAndCheckDisabled',
   'click .notebook-help':   'showShortcuts',
   'click .notebook-exec':   'runNotebook',
   'click .notebook-clone':  'cloneNotebook',
   'click .notebook-save':   'saveNotebook',
   'click .notebook-share':  'shareNotebook',
-  'click .toggle-notebook': 'toggleView',
+  'click .toggle-notebook': function (e) {
+    this.blurAndCheckDisabled(e);
+    this.toggleView();
+  },
   'click .notebook-new':    'newNotebook',
   'keyup .notebook-title': function (e, el) {
     var meta = persistence.get('notebook').get('meta');
@@ -63,6 +56,26 @@ App.prototype.events = {
       el.blur();
     }
   }
+};
+
+/**
+ * Runs when a toolbar button is clicked and when toggle-notebook is clicked.
+ * Checks that target button is not disabled to avoid the event's propagation and blurs to stop the outline.
+ * @param e : MouseEvent
+ * @returns {App}
+ */
+App.prototype.blurAndCheckDisabled = function (e) {
+  var node = e.target;
+
+  while (node.tagName !== 'BUTTON') {
+    node = node.parentNode;
+  }
+
+  node.blur();
+  if (node.classList.contains('btn-disabled')) {
+    e.stopImmediatePropagation();
+  }
+  return this;
 };
 
 /**
