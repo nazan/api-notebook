@@ -1,11 +1,11 @@
 {
   "application": {
-    "url":           "http://api-notebook.ue1.kstg.k8s.stgx.msap.io",
+    "url":           "http://api-notebook.stgx.anypoint.mulesoft.com",
     "title":         "API Notebook",
     "oauthCallback": "/authenticate/oauth.html"
   },
   "embed": {
-    "script": "http://api-notebook.ue1.kstg.k8s.stgx.msap.io/scripts/embed.js"
+    "script": "http://api-notebook.stgx.anypoint.mulesoft.com/scripts/embed.js"
   },
   "locals": {
     "googleAnalytics": false
