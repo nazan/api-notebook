@@ -201,80 +201,74 @@ ArgumentDocs.prototype.update = function () {
     return this.remove();
   }
 
-  var cur        = this.data.to = cm.getCursor();
-  var from       = this.data.from;
-  var token      = getToken(cm, cur);
-  var index      = 0;
-  var curCount   = 0;
-  var roundLevel = 0;
-  var curlyLevel = 0;
+  var cur   = this.data.to = cm.getCursor();
+  var from  = this.data.from;
+  var token = getToken(cm, cur);
 
   // Remove the documentation if we are stating before the opening bracket.
   if (isTokenBefore(token.pos, from)) {
     return this.remove();
   }
 
-  // Iterate over every new block and track our argument index. If we hit
+  var roundLevel = 0;
+  var stack      = [];
+
+  // Iterate over every new block and push them into a stack to know the current index. If we hit
   // a new function inside the current arguments, remove the current widget.
   while (!isTokenBefore(token.pos, from)) {
-    if (token.type === null) {
-      if (token.string === '(') {
-        roundLevel++;
+    if (token.string === '(') {
+      roundLevel++;
+      // Check if the previous token is a function type.
+      var prev  = tokenHelpers.eatEmptyAndMove(cm, token);
+      var match = token.start === from.ch && token.pos.line === from.line;
 
-        // If we have a resolved round level, it would have just completed
-        // bracket notation which can contain commas.
-        if (roundLevel > -1) {
-          // Make sure we don't reset on the real opening bracket.
-          if (!(token.pos.ch === from.ch && token.pos.line === from.line)) {
-            index -= curCount;
-            curCount = 0;
-          }
-        }
-
-        // Check if the previous token is a function type.
-        var prev  = tokenHelpers.eatEmptyAndMove(cm, token);
-        var match = token.start === from.ch && token.pos.line === from.line;
-
-        if (roundLevel > 0 && FUNCTION_TYPES[prev.type] && !match) {
-          return this.remove();
-        }
-      } else if (token.string === ')') {
-        roundLevel--;
-
-        if (roundLevel < -1) {
-          index -= curCount;
-          curCount = 0;
-        } else if (roundLevel === -1) {
-          curCount = 0;
-        }
-      } else if (token.string === '{') {
-        curlyLevel++;
-
-        if (curlyLevel > -1) {
-          index -= curCount;
-          curCount = 0;
-        }
-      } else if (token.string === '}') {
-        curlyLevel--;
-
-        if (curlyLevel < -1) {
-          index -= curCount;
-          curCount = 0;
-        } else if (curlyLevel === -1) {
-          curCount = 0;
-        }
-      } else if (token.string === ',') {
-        index++;
-        curCount++;
+      if (roundLevel > 0 && FUNCTION_TYPES[prev.type] && !match) {
+        return this.remove();
       }
+    } else if (token.string === ')') {
+      roundLevel--;
     }
-
+    stack.push(token);
     token = tokenHelpers.eatEmptyAndMove(cm, token);
   }
+  var index = 0;
+  // If it doesn't start with a parenthesis this means that there are no arguments, so doc must be removed.
+  if (stack[stack.length-1].string === '(') {
+    stack.pop();
 
-  // If there is no block level, we are no longer inside the arguments.
-  if (roundLevel < 1) {
-    return this.remove();
+    var curlyStack = [];
+    var bracketStack = [];
+    // While the stack has tokens, consume them and add them to the bracket's or curly's stack if they are opening
+    // tokens and remove them if they are closing tokens.
+    while (stack.length !== 0 ) {
+      var curr = stack.pop().string;
+      switch (curr) {
+        case ',':
+          // If the stacks are empty, then pass to the next argument.
+          if (curlyStack.length === 0 && bracketStack.length === 0) {
+            index++;
+          }
+          break;
+        case '{':
+          curlyStack.push(curr);
+          break;
+        case '(':
+          bracketStack.push(curr);
+          break;
+        case '}':
+          curlyStack.pop();
+          break;
+        case ')':
+          // If the bracketStack is empty then it's closing the argument-doc.
+          if (bracketStack.length === 0) {
+            return this.remove();
+          }
+          bracketStack.pop();
+          break;
+        default:
+      }
+
+    }
   }
 
   this.select(index);
