@@ -4,6 +4,8 @@ asset: core
 
 credentialsPrefix: exchange
 strategy: node
+deploymentStrategy: continuous-deployment
+
 version: 1.2
 requires:
   db: false
