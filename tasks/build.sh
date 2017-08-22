@@ -14,7 +14,7 @@ mkdir dist
 mkdir artifact
 
 # Get package name and version
-PACKAGE_NAME=`node -e "console.log(require('./package.json').name);"`
+PACKAGE_NAME="api-tooling-api-notebook-core"
 PACKAGE_VERSION=`node -e "console.log(require('./package.json').version);"`
 
 # If not running in JENKINS
@@ -40,8 +40,6 @@ npm install --silent --production --prefix dist --userconfig=.npmrc
 # Copy
 cp -r src dist/
 cp -r config dist/
-#cp ${PACKAGE_NAME}.js dist/
-#cp newrelic.js dist/
 
 # Create Tar
 tar -czf artifact/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz -C dist .
