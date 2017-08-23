@@ -63,7 +63,9 @@
     "grunt": "grunt",
     "start": "grunt",
     "git:version": "git-rev",
-    "test": "grunt test"
+    "test": "grunt test",
+    "preversion": "npm run build",
+    "postversion": "git push origin HEAD && git push origin $(git describe --tags) && npm publish"
   },
   "repository": {
     "type": "git",
