@@ -1,6 +1,6 @@
 {
-  "name": "api-notebook",
-  "version": "1.2.0",
+  "name": "@mulesoft/api-notebook",
+  "version": "1.2.2",
   "description": "Executable JavaScript environment for running API examples.",
   "browserify": {
     "transform": [
@@ -8,6 +8,7 @@
       "envify-config"
     ]
   },
+  "main": "lib/scripts/bundle.js",
   "dependencies": {
     "async": "0.2.9",
     "backbone": "1.1.0",
@@ -59,7 +60,8 @@
     "uglifyify": "1.2.1"
   },
   "scripts": {
-    "build": "grunt build",
+    "build": "grunt build && ./generateLib.sh",
+    "prepublish": "npm run build",
     "grunt": "grunt",
     "start": "grunt",
     "git:version": "git-rev",
