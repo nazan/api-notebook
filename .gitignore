@@ -7,6 +7,8 @@ setenv.sh
 output
 artifacts
 config/runtime.json
+config/development.json
+config/production.json
 *.iml
 .idea
 lib
