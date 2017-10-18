@@ -1,4 +1,5 @@
-FROM devdocker.mulesoft.com:18078/base/ubuntu:trusty-1.5.0-31-g1dc737a
+#FROM devdocker.mulesoft.com:18078/base/ubuntu:trusty-1.5.0-31-g1dc737a
+FROM ubuntu:trusty
 
 # Intall build dependencies
 RUN apt-get update \
