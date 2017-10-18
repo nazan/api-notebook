@@ -3,6 +3,7 @@ npm-debug.log
 node_modules
 build
 .env
+setenv.sh
 output
 artifacts
 config/runtime.json
