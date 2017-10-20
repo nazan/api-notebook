@@ -12,3 +12,4 @@ config/production.json
 *.iml
 .idea
 lib
+Dockerfile.runtime
