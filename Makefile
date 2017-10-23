@@ -6,10 +6,13 @@ PROD_IMAGE = $(IMAGE_NAME):$$(git describe)
 
 SRC_VOLUME_PARAM = -v $$(pwd):/usr/src/app
 
+#BUILD_ENV_VARS_TO_INJECT = -e NODE_ENV
+
 #### BUILD the artifacts
 .PHONY: build-artifacts
 build-artifacts:
 	docker build -f Dockerfile.build -t $(BUILD_IMAGE) .
+	#docker run $(BUILD_ENV_VARS_TO_INJECT) --rm $(SRC_VOLUME_PARAM) $(BUILD_IMAGE) /usr/src/app/package-build.sh
 	docker run --rm $(SRC_VOLUME_PARAM) $(BUILD_IMAGE) /usr/src/app/package-build.sh
 
 #### BUILD DOCKER IMAGE with the generated artifacts
