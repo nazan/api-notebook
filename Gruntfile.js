@@ -139,6 +139,12 @@ module.exports = function (grunt) {
             cwd: 'vendor/fontello/font',
             src: ['**/*'],
             dest: 'build/font/'
+          },
+          {
+            expand: true,
+            cwd: 'node_modules',
+            src: ['**/*'],
+            dest: 'build/node_modules/'
           }
         ]
       }

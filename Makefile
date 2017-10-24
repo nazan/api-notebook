@@ -13,7 +13,7 @@ SRC_VOLUME_PARAM = -v $$(pwd):/usr/src/app
 build-artifacts:
 	docker build -f Dockerfile.build -t $(BUILD_IMAGE) .
 	#docker run $(BUILD_ENV_VARS_TO_INJECT) --rm $(SRC_VOLUME_PARAM) $(BUILD_IMAGE) /usr/src/app/package-build.sh
-	docker run --rm $(SRC_VOLUME_PARAM) $(BUILD_IMAGE) /usr/src/app/package-build.sh
+	docker run $(SRC_VOLUME_PARAM) $(BUILD_IMAGE) /usr/src/app/package-build.sh
 
 #### BUILD DOCKER IMAGE with the generated artifacts
 .PHONY: build-image
