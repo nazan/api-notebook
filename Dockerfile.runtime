@@ -21,4 +21,4 @@ EXPOSE 3000
 # Change to user with lower privileges
 USER app
 
-CMD node server.js '/usr/src/app' 3000
+CMD node server.js './' 3000
