@@ -10,6 +10,6 @@ mkdir ./output && \
 cd ./build && \
 cp -R {./authenticate,./font,./images,./scripts,./plugins,./styles,embed.html,embedded.html,favicon.ico,index.html,server.js} ../output && \
 cd .. && \
-cp -R {.node_modules} ./output && \
+cp -R {./node_modules} ./output && \
 tar -czvf api-notebook.tar.gz -C ./output . && \
 mv api-notebook.tar.gz ./output
