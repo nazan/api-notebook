@@ -1,4 +1,4 @@
-if(process.argv.length < 4)  {
+if (process.argv.length < 4) {
   console.error('Please pass required parameters, \'path\' and \'port\'.');
   process.exit();
 }
@@ -8,16 +8,6 @@ var http = require('http');
 var request = require('request');
 
 var app = connect();
-
-// gzip/deflate outgoing responses
-var compression = require('compression');
-app.use(compression());
-
-// parse urlencoded request bodies into req.body
-var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
 
 app.use(function(req, res, next) {
   if (req.url.substr(0, 7) !== '/proxy/') {
@@ -52,6 +42,12 @@ app.use(function(req, res, next) {
   // response object. This avoids having to buffer the request body in cases
   // where they could be unexepectedly large and/or slow.
   return req.pipe(proxy).pipe(res);
+});
+
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+  return next();
 });
 
 var serveStatic = require('serve-static');

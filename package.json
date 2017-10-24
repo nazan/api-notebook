@@ -13,10 +13,8 @@
     "async": "0.2.9",
     "backbone": "1.1.0",
     "backbone.native": "1.0.0",
-    "body-parser": "^1.18.2",
     "change-case": "1.0.6",
     "codemirror": "5.4.0",
-    "compression": "^1.7.1",
     "config": "0.4.33",
     "connect": "^3.6.5",
     "css-component": "0.0.2",
@@ -67,7 +65,7 @@
     "uglifyify": "1.2.1"
   },
   "scripts": {
-    "build": "grunt build",
+    "build": "grunt build && ./generateLib.sh",
     "prepublish": "npm run build",
     "grunt": "grunt",
     "start": "grunt",
