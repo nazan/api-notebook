@@ -103,6 +103,8 @@ module.exports = function (grunt) {
   };
 
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+
     /**
      * Remove the directory and any directory contents.
      *
@@ -254,6 +256,17 @@ module.exports = function (grunt) {
       }
     },
 
+
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      build: {
+        src: 'src/server.js',
+        dest: 'build/server.js'
+      }
+    },
+
     /**
      * Watch for changes on any specific files and rebuild the output.
      *
@@ -291,7 +304,7 @@ module.exports = function (grunt) {
 
   // Generate the built application.
   grunt.registerTask('build', [
-    'check', 'clean:build', 'copy:build', 'browserify', 'stylus'
+    'check', 'clean:build', 'copy:build', 'browserify', 'stylus', 'uglify:build'
   ]);
 
   grunt.registerTask('pages', [

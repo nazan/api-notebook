@@ -2,9 +2,9 @@
 FROM ubuntu:trusty
 
 # Intall build dependencies
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-      python \
+
+RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - \
+ && sudo apt-get install -y --no-install-recommends nodejs \
  && rm -rf /var/lib/apt/lists/*
 
 # Add app user
@@ -14,11 +14,10 @@ RUN groupadd -r app && useradd -r -g app app
 RUN mkdir -p /usr/src/app && chown -R app:app /usr/src/app
 WORKDIR /usr/src/app
 COPY ./artifacts /usr/src/app/
-COPY server.py /usr/src/app/
 
 EXPOSE 3000
 
 # Change to user with lower privileges
 USER app
 
-CMD python server.py '/' 3000
+CMD node server.js '/' 3000
