@@ -1,5 +1,5 @@
 if(process.argv.length < 4)  {
-  console.error("Please pass required parameters, 'path' and 'port'.");
+  console.error('Please pass required parameters, \'path\' and \'port\'.');
   process.exit();
 }
 
