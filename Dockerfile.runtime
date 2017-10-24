@@ -1,11 +1,12 @@
 #FROM devdocker.mulesoft.com:18078/base/ubuntu:trusty-1.5.0-31-g1dc737a
-FROM ubuntu:trusty
+#FROM ubuntu:trusty
+FROM node:6.11.4-wheezy
 
 # Intall build dependencies
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - \
- && sudo apt-get install -y --no-install-recommends nodejs \
- && rm -rf /var/lib/apt/lists/*
+#RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - \
+# && sudo apt-get install -y --no-install-recommends nodejs \
+# && rm -rf /var/lib/apt/lists/*
 
 # Add app user
 RUN groupadd -r app && useradd -r -g app app
